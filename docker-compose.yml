@@ -3,13 +3,13 @@ version: '2'
 services:
 
   app:
-    container_name: zhivu-sportom.app
+    container_name: laravel.app
     build: docker/php
     volumes:
       - .:/app
 
   nginx:
-    container_name: zhivu-sportom.nginx
+    container_name: laravel.nginx
     build: docker/nginx
     volumes_from:
       - app
@@ -17,7 +17,7 @@ services:
       - 835:80
 
   db:
-    container_name: zhivu-sportom.mysql
+    container_name: laravel.mysql
     image: mysql
     volumes:
       - ./docker/mysql/.db:/var/lib/mysql
@@ -27,7 +27,7 @@ services:
         - 850:3306
 
   phpmyadmin:
-    container_name: zhivu-sportom.phpmyadmin
+    container_name: laravel.phpmyadmin
     image: phpmyadmin/phpmyadmin
     ports:
         - 864:80
