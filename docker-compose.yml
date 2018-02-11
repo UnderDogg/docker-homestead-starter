@@ -6,7 +6,8 @@ services:
     container_name: laravel.app
     build: docker/php
     volumes:
-      - .:/app
+      - .:/var/www
+      - ./docker/php/.composer:/opt/composer
 
   nginx:
     container_name: laravel.nginx
