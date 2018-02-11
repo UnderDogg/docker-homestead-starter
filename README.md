@@ -6,6 +6,6 @@ PHP7-FPM, NGINX, MySQL for developing Laravel application
     $ cd laravel-docker
     $ docker-compose build
     $ docker-compose up -d
-    $ docker-compose exec --user="www-data" app composer install
+    $ ./docker/console composer install
 
 Run application: http://localhost:835
