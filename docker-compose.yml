@@ -2,32 +2,67 @@ version: '2'
 
 services:
 
-  app:
-    container_name: laravel.app
-    build: docker/php
+### PHP-FPM ##############################################
+  php-fpm:
+    hostname: php-fpm
+    container_name: invoiceplane.app
+    build: ./.docker/php-fpm
     volumes:
-      - .:/var/www
+      - ./projects:/var/www/projects
+    expose:
+      - "9000"
 
+### NGINX Server #########################################
   nginx:
-    container_name: laravel.nginx
-    build: docker/nginx
+    hostname: nginx
+    container_name: invoiceplane.nginx
+    build: ./.docker/nginx
     volumes_from:
-      - app
-    ports:
-      - 835:80
-
-  db:
-    container_name: laravel.mysql
-    image: mysql
+      - php-fpm
     volumes:
-      - ./docker/mysql/.db:/var/lib/mysql
-    env_file:
-      - ./docker/mysql/env
+      - ./projects:/var/www/projects
+      - ./logs:/var/log/nginx
+      - ./sites:/etc/nginx/sites-available
     ports:
-        - 850:3306
+      - "80:80"
+    depends_on:
+        - php-fpm
 
+### MySQL ################################################
+  mysql:
+    hostname: mysql
+    container_name: invoiceplane.mysql
+    build: ./.docker/mysql
+    env_file:
+      - ./.docker/mysql/env
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+    ports:
+      - "33061:3306"
+    restart: always
+
+
+
+### Redis ################################################
+  redis:
+    hostname: redis
+    container_name: invoiceplane.redis
+    build: ./.docker/redis
+    volumes:
+      - ./data/redis:/data
+    ports:
+      - "6379:6379"
+
+### phpMyAdmin ###########################################
   phpmyadmin:
-    container_name: laravel.phpmyadmin
+    hostname: phpmyadmin
+    container_name: invoiceplane.phpmyadmin
+    build: ./.docker/phpmyadmin
     image: phpmyadmin/phpmyadmin
     ports:
-        - 864:80
+      - "8080:80"
+    depends_on:
+      - mysql
+    volumes:
+      - ./.docker/phpmyadmin/themes/metro/:/var/www/html/themes/metro/
