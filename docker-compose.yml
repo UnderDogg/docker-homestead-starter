@@ -5,7 +5,7 @@ services:
 ### PHP-FPM ##############################################
   php-fpm:
     hostname: php-fpm
-    container_name: invoiceplane.app
+    container_name: ivplapp
     build: ./.docker/php-fpm
     volumes:
       - ./projects:/var/www/projects
@@ -15,7 +15,7 @@ services:
 ### NGINX Server #########################################
   nginx:
     hostname: nginx
-    container_name: invoiceplane.nginx
+    container_name: ivplnginx
     build: ./.docker/nginx
     volumes_from:
       - php-fpm
@@ -31,7 +31,7 @@ services:
 ### MySQL ################################################
   mysql:
     hostname: mysql
-    container_name: invoiceplane.mysql
+    container_name: ivplmysql
     build: ./.docker/mysql
     env_file:
       - ./.docker/mysql/env
@@ -47,7 +47,7 @@ services:
 ### Redis ################################################
   redis:
     hostname: redis
-    container_name: invoiceplane.redis
+    container_name: ivplredis
     build: ./.docker/redis
     volumes:
       - ./data/redis:/data
@@ -57,7 +57,7 @@ services:
 ### phpMyAdmin ###########################################
   phpmyadmin:
     hostname: phpmyadmin
-    container_name: invoiceplane.phpmyadmin
+    container_name: ivplphpmyadmin
     build: ./.docker/phpmyadmin
     image: phpmyadmin/phpmyadmin
     ports:
